@@ -1,0 +1,30 @@
+{% extends 'includes/index.html' %}
+{% load static %}
+{% block title %}
+    Library
+{% endblock %}
+
+{% block hero %}
+    {% include 'library/home_page/hero.html' %}
+{% endblock %}
+
+{% block main %}
+    {# About Section #}
+    {% include 'library/home_page/about.html' %}
+
+    {# User counts Section  #}
+    {% include 'library/home_page/counts.html' %}
+
+    {# Benefits Section #}
+    {% include 'library/home_page/services.html' %}
+
+    {# Team Section #}
+    {% include 'library/home_page/team.html' %}
+
+    {# Pricing Section #}
+{#    {% include 'library/home_page/price.html' %}#}
+
+    {# Questioons section #}
+    {% include 'library/home_page/question.html' %}
+
+{% endblock %}
