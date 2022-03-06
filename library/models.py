@@ -1,7 +1,18 @@
 from django.db import models
 
 
-class BookTags(models.Model):
+class TagsType(models.Model):
+    class Meta:
+        verbose_name = 'Тип категории'
+        verbose_name_plural = 'Типы категории'
+
+    name = models.CharField(verbose_name='Название', max_length=128)
+
+    def __str__(self):
+        return self.name
+
+
+class Tags(models.Model):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -15,6 +26,7 @@ class BookTags(models.Model):
     )
     name = models.CharField(verbose_name='Название', max_length=128)
     color = models.CharField(verbose_name='Цвет', choices=colors, default='1', max_length=2)
+    tags_type = models.ForeignKey(verbose_name='Тип категории', to=TagsType, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -31,7 +43,7 @@ class Book(models.Model):
     author_surname = models.CharField(verbose_name='Фамилия Автора', max_length=128)
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     cover = models.ImageField(verbose_name='Обложка', blank=True, default='', upload_to='static/book')
-    tags = models.ManyToManyField(verbose_name='Категории', blank=True, to=BookTags)
+    tags = models.ManyToManyField(verbose_name='Категории', blank=True, to=Tags)
 
     def __str__(self):
         return self.name
