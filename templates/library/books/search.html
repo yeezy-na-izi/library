@@ -1,0 +1,7 @@
+<section id="search" class="search">
+    <form class="d-flex" method="post">
+        {% csrf_token %}
+        <input name="search" class="form-control m-2" type="search" placeholder="Search" aria-label="Search">
+        <button type="submit" class="btn btn-outline-primary">Search</button>
+    </form>
+</section>

@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'includes/index.html' %}
 
-</body>
-</html>
+{% block main %}
+    {# Search section #}
+    {% include 'library/books/search.html' %}
+
+    {# Results section #}
+    {% include 'library/books/results.html' %}
+{% endblock %}
