@@ -1,4 +1,7 @@
 from django.db import models
+from django.template.defaultfilters import slugify
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 
 class TagsType(models.Model):
@@ -44,6 +47,13 @@ class Book(models.Model):
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     cover = models.ImageField(verbose_name='Обложка', blank=True, default='', upload_to='static/book')
     tags = models.ManyToManyField(verbose_name='Категории', blank=True, to=Tags)
+    visibility = models.BooleanField(verbose_name='Визибилити', default=True)
+    slug = models.SlugField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = urlsafe_base64_encode(force_bytes(self))[:16]
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
