@@ -1,0 +1,28 @@
+{% extends 'includes/index.html' %}
+{% load static %}
+{% block title %}
+    Вход
+{% endblock %}
+
+{% block main %}
+    <section>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <label>
+                    <input type="text" class="form-control" name="{{ form.username.name }}" placeholder="Email"
+                           autocomplete="username" required>
+                </label>
+            </div>
+            <div class="form-group mb-3">
+                <label>
+                    <input type="password" class="form-control" name="{{ form.password.name }}" placeholder="Пароль"
+                           autocomplete="password" required>
+                </label>
+            </div>
+            <input class="btn btn-outline-primary" type="submit" name="create_user">
+            <a class="btn btn-outline-secondary" href="{% url 'registration_page' %}">Регистрация</a>
+
+        </form>
+    </section>
+{% endblock %}
