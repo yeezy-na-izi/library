@@ -18,7 +18,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
-    stared_books = models.ManyToManyField(verbose_name='Помеченные книги', to=Book)
+    stared_books = models.ManyToManyField(verbose_name='Помеченные книги', to=Book, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
