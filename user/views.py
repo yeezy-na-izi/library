@@ -1,4 +1,5 @@
-from django.core.mail import EmailMessage
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
@@ -13,7 +14,9 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from user.forms import CreateUserForm, LoginUserForm
 from user.models import CustomUser
+from user.utils import send_email
 from user.utils import token_generator
+
 
 
 def profile(request):
@@ -43,6 +46,62 @@ def authorization(request):
     return render(request, 'user/login.html', context)
 
 
+def reset_password(request):
+    if request.user.is_authenticated:
+        messages.success(request, 'Вы уже авторизованны')
+        return redirect(f'/profile')
+    if request.method == 'POST':
+        username = request.POST['username']
+        try:
+            validate_email(username)
+            try:
+                user = CustomUser.objects.get(email=username)
+            except CustomUser.DoesNotExist:
+                messages.error(request, 'Такого пользователя не найдено')
+                return redirect('/restore')
+        except ValidationError:
+            try:
+                user = CustomUser.objects.get(username=username)
+            except CustomUser.DoesNotExist:
+                messages.error(request, 'Такого пользователя не найдено')
+                return redirect('/restore')
+
+        user_id = urlsafe_base64_encode(force_bytes(user.username))
+        domain = get_current_site(request).domain
+        relative = reverse('restore', kwargs={'user_id': user_id,
+                                               'token': token_generator.make_token(user)})
+        restore_url = f'http://{domain}{relative}'
+
+        email_subject = 'Восстановление пароля'
+        email_body = f'Привет, {user.username}, чтобы восстановить пароль, перейди по ссылке: \n{restore_url}'
+
+        send_email(email_subject, email_body, [user.email])
+        messages.success(request, 'Проверь свою почту')
+    return render(request, 'user/restore.html')
+
+
+def restore(request, user_id, token):
+    if request.user.is_authenticated:
+        messages.success(request, 'Вы уже авторизованны')
+        return redirect(f'/profile')
+    username = force_str(urlsafe_base64_decode(user_id))
+    user = CustomUser.objects.get(username=username)
+    if not token_generator.check_token(user,  token):
+        messages.error(request, 'Что-то пошло не так')
+        return redirect('/login')
+    if request.method == 'POST':
+        password1, password2 = request.POST['password1'], request.POST['password2']
+        if password1 != password2:
+            messages.error(request, 'Пароли не совпадают')
+            return redirect('#')
+        user.set_password(password1)
+        user.save()
+        login(request, user)
+        return redirect('/profile')
+
+    return render(request, 'user/restore_password.html')
+
+
 def registration(request):
     if request.user.is_authenticated:
         messages.success(request, 'Вы уже авторизованны')
@@ -54,18 +113,18 @@ def registration(request):
             user = user_form.save()
             user.is_active = False
             user.save()
-            # return redirect('/login')
+
             user_id = urlsafe_base64_encode(force_bytes(user.username))
             domain = get_current_site(request).domain
             relative = reverse('activate', kwargs={'user_id': user_id,
                                                    'token': token_generator.make_token(user)})
             activate_url = f'http://{domain}{relative}'
-            #
+
             email_subject = 'Подтверждение почты'
             email_body = f'Привет, {user.username}, это активация аккаунта, перейди по ссылке чтобы ' \
                          f'верефицировать свой аккаунт\n{activate_url}'
-            email = EmailMessage(email_subject, email_body, 'noreply@semycolon.com', [user.email], )
-            email.send(fail_silently=False)
+
+            send_email(email_subject, email_body, [user.email])
 
             messages.success(request, 'Подтвердите свою почту и войдите')
             return redirect('/login')

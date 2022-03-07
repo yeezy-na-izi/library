@@ -1,0 +1,21 @@
+{% extends 'includes/index.html' %}
+{% load static %}
+{% block title %}
+    Вход
+{% endblock %}
+
+{% block main %}
+    <section>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <label>
+                    <input type="text" class="form-control" name="username" placeholder="Имя пользователя/почта"
+                           autocomplete="username" required>
+                </label>
+            </div>
+            <input class="btn btn-outline-primary" type="submit" name="restore">
+
+        </form>
+    </section>
+{% endblock %}
