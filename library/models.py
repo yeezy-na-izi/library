@@ -8,7 +8,15 @@ class TagsType(models.Model):
         verbose_name = 'Тип категории'
         verbose_name_plural = 'Типы категории'
 
+    colors = (
+        ('bg-secondary', 'Серый'),
+        ('bg-success', 'Зеленый'),
+        ('bg-warning text-dark', 'Желтый'),
+        ('bg-info text-dark', 'Голубой'),
+        ('bg-dark', 'Черный'),
+    )
     name = models.CharField(verbose_name='Название', max_length=128)
+    color = models.CharField(verbose_name='Цвет', choices=colors, default='bg-secondary', max_length=32)
 
     def __str__(self):
         return self.name
@@ -19,15 +27,7 @@ class Tags(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-    colors = (
-        ('1', 'Голубой'),
-        ('2', 'Розовый'),
-        ('3', 'Фиолетовый'),
-        ('4', 'Зеленый'),
-        ('5', 'Розово-фиолетовый'),
-    )
     name = models.CharField(verbose_name='Название', max_length=128)
-    color = models.CharField(verbose_name='Цвет', choices=colors, default='1', max_length=2)
     tags_type = models.ForeignKey(verbose_name='Тип категории', to=TagsType, on_delete=models.CASCADE)
 
     def __str__(self):
