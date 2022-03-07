@@ -35,6 +35,9 @@
 <body>
 
 {% include 'includes/header.html' %}
+{% if messages %}
+    {% include 'includes/messages.html' %}
+{% endif %}
 
 {% block hero %}
 

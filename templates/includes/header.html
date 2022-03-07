@@ -16,7 +16,11 @@
                 <li><a class="nav-link scrollto" href="/#about">О нас</a></li>
                 <li><a class="nav-link scrollto" href="/#services">О поиске</a></li>
                 <li><a class="nav-link scrollto" href="/#team">Команда</a></li>
-                <li><a class="getstarted scrollto" href='/profile'>Профиль</a></li>
+                {% if request.user.is_authenticated %}
+                    <li><a class="getstarted scrollto" href='/profile'>Профиль</a></li>
+                {% else %}
+                    <li><a class="getstarted scrollto" href='/login'>Войти</a></li>
+                {% endif %}
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
