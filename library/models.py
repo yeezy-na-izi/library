@@ -44,10 +44,11 @@ class Book(models.Model):
     author_name = models.CharField(verbose_name='Имя Автора', max_length=48)
     author_surname = models.CharField(verbose_name='Фамилия Автора', max_length=128)
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
-    cover = models.ImageField(verbose_name='Обложка', blank=True, default='', upload_to='static/book')
+    cover = models.ImageField(verbose_name='Обложка', blank=True, default='', upload_to='static/book/img')
     tags = models.ManyToManyField(verbose_name='Категории', blank=True, to=Tags)
     visibility = models.BooleanField(verbose_name='Визибилити', default=True)
     slug = models.SlugField(null=True, blank=True)
+    pdf = models.FileField(verbose_name='PDF', blank=True, upload_to='static/book/pdf')
 
     def save(self, *args, **kwargs):
         if not self.slug:
