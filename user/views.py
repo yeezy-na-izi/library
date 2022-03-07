@@ -15,7 +15,10 @@ def profile(request):
     if not request.user.is_authenticated:
         messages.error(request, 'Вы еще не вошли')
         return redirect('/login')
-    return render(request, 'user/profile.html')
+    context = {
+        "books": request.user.stared_books.all()
+    }
+    return render(request, 'user/profile.html', context)
 
 
 def authorization(request):
