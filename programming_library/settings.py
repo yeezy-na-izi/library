@@ -26,8 +26,9 @@ SECRET_KEY = 'django-insecure-3pxc%b7_a2klsr^&4oe#288a32@@rdqk7dr-$v6wfo+!mzyy8!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
@@ -140,9 +141,16 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_HOST_USER = 'no_reply.library@extroot.ru'
+# EMAIL_HOST = 'smtp.yandex.ru'
+# EMAIL_HOST_USER = 'no_reply.library@extroot.ru'
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_PORT = 587
+# EMAIL_HOST_PASSWORD = 'xHdYazhE9TXaKjY'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'cinema.creating@gmail.com'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = 'xHdYazhE9TXaKjY'
+EMAIL_HOST_PASSWORD = 'qDePPCze8Jd!oxQb'
