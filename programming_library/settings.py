@@ -135,6 +135,7 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = 'static_root/'
 
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
