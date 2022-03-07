@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from library.models import Book
 from library.models import TagsType
+from library.models import Tags
 
 
 def home_page(request):
@@ -10,10 +11,10 @@ def home_page(request):
 
 def books(request):
     if request.method == 'POST':
-        if request.POST['search']:
+        if request.POST['type'] == 'search':
             books_obj = Book.objects.filter(name__icontains=request.POST['search'])
-        else:
-            books_obj = Book.objects.all()
+        elif request.POST['type'] == 'sidebar':
+            books_obj = Book.objects.filter(tags=Tags.objects.get(pk=int(request.POST['first'])))
     else:
         books_obj = Book.objects.all()
     context = {

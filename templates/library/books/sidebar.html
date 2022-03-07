@@ -1,0 +1,31 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32">
+            <a href="#bootstrap"></a>
+        </svg>
+        <span class="fs-4">Sidebar</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <form method="post" name="sidebar">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="sidebar">
+            {% for tag in tags %}
+                <li class="nav-item">
+                    <div class="input-group mb-3">
+                        <label for="inputGroupSelect{{ forloop.counter }}"></label>
+                        <select class="form-select" id="inputGroupSelect{{ forloop.counter }}" name="first">
+                            <option selected>{{ tag.name }}</option>
+                            {% for option in tag.tags_set.all %}
+                                <option value="{{ option.pk }}">{{ option.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </li>
+            {% endfor %}
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </form>
+
+    </ul>
+    <hr>
+</div>
