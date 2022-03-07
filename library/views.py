@@ -1,3 +1,8 @@
+from django.contrib import messages
+from django.http import HttpResponse
+from django.http import HttpResponseForbidden
+from django.http import HttpResponseNotFound
+from django.shortcuts import redirect
 from django.shortcuts import render
 from library.models import Book
 from library.models import TagsType
@@ -37,3 +42,15 @@ def book_page(request, slug):
     book = Book.objects.get(slug=slug)
     context = {'book': book}
     return render(request, 'library/book/index.html', context)
+
+
+def book_star(request, slug):
+    if request.method != 'POST':
+        return HttpResponseNotFound()
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
+    book = Book.objects.get(slug=slug)
+    request.user.stared_books.add(book)
+    request.user.save()
+    return redirect(f'/book/{slug}')
