@@ -31,3 +31,9 @@ def books(request):
         'tags': TagsType.objects.all()
     }
     return render(request, 'library/books/index.html', context)
+
+
+def book_page(request, slug):
+    book = Book.objects.get(slug=slug)
+    context = {'book': book}
+    return render(request, 'library/book/index.html', context)

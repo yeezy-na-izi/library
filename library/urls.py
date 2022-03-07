@@ -4,4 +4,5 @@ from library import views
 urlpatterns = [
     path('', views.home_page, name='home_page'),
     path('books/', views.books, name='books'),
+    path('book/<slug>', views.book_page, name='book_page')
 ]
