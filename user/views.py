@@ -99,7 +99,10 @@ def verification_email(request, user_id, token):
     try:
         username = force_str(urlsafe_base64_decode(user_id))
         user = CustomUser.objects.get(username=username)
-        if token_generator.check_token(user, token) and not user.is_active:
+        if user.is_active:
+            messages.warning(request, 'Аккаунт уже активен')
+            return redirect('/login')
+        if token_generator.check_token(user, token):
             user.is_active = True
             user.save()
             messages.success(request, 'Аккаунт успешко активирован')
