@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from django.contrib.messages import constants as messages
 
+import django_heroku
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,9 +28,9 @@ SECRET_KEY = 'django-insecure-3pxc%b7_a2klsr^&4oe#288a32@@rdqk7dr-$v6wfo+!mzyy8!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'programming-library-db.herokuapp.com']
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://programming-library-db.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = [
@@ -131,7 +133,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = 'static/'
+STATIC_ROOT = 'static_root/'
+
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -155,3 +158,5 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = '3ref2RGrcVp74BS'
+
+django_heroku.settings(locals())

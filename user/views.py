@@ -18,7 +18,6 @@ from user.utils import send_email
 from user.utils import token_generator
 
 
-
 def profile(request):
     if not request.user.is_authenticated:
         messages.error(request, 'Вы еще не вошли')
