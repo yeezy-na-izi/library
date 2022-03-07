@@ -1652,3 +1652,7 @@ section {
   color: #fff;
   text-decoration: none;
 }
+
+.search {
+  padding: 100px 0 0 0;
+}

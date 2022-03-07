@@ -1,9 +1,18 @@
 {% extends 'includes/index.html' %}
 
+{% block title %}
+    Search
+{% endblock %}
+
 {% block main %}
+    {# Results section #}
+    {% include 'library/books/sidebar.html' %}
+
     {# Search section #}
     {% include 'library/books/search.html' %}
 
     {# Results section #}
     {% include 'library/books/results.html' %}
+
+
 {% endblock %}

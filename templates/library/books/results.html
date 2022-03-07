@@ -1,5 +1,15 @@
-<section id="results" >
-    {% for book in books %}
-        <p>{{ book.name }}</p>
-    {% endfor %}
+<section id="results">
+    <div class="row" style="padding: 10px">
+        {% for book in books %}
+            <div class="col-sm-6" style="padding: 5px 5px">
+                <div class="card" >
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.name}}</h5>
+                        <p class="card-text">{{ book.description }}</p>
+                        <a href="#" class="btn btn-primary">Открыть</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </section>

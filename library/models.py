@@ -8,6 +8,7 @@ class TagsType(models.Model):
 
     name = models.CharField(verbose_name='Название', max_length=128)
 
+
     def __str__(self):
         return self.name
 

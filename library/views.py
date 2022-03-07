@@ -18,6 +18,6 @@ def books(request):
         books_obj = Book.objects.all()
     context = {
         'books': books_obj,
-        'Tags': Book.objects.all()
+        'tags': TagsType.objects.all()
     }
     return render(request, 'library/books/index.html', context)
