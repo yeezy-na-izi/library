@@ -1,20 +1,17 @@
-import os
+from django.core.mail import EmailMessage
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.core.mail import EmailMessage
-from django.http import HttpResponse
-from django.utils.encoding import force_bytes, force_str
-from django.shortcuts import redirect
-from django.shortcuts import render
+
 from django.urls import reverse
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_decode
-from django.utils.http import urlsafe_base64_encode
+from django.shortcuts import render
+from django.shortcuts import redirect
+
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from user.forms import CreateUserForm, LoginUserForm
-# Create your views here.
 from user.models import CustomUser
 from user.utils import token_generator
 
