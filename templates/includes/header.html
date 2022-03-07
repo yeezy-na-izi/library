@@ -12,14 +12,13 @@
                         </a>
                     </li>
                 {% endif %}
-                <li><a class="nav-link scrollto active" href="/#hero">Домой</a></li>
-                <li><a class="nav-link scrollto" href="/#about">О нас</a></li>
-                <li><a class="nav-link scrollto" href="/#services">О поиске</a></li>
-                <li><a class="nav-link scrollto" href="/#team">Команда</a></li>
+                <li><a class="nav-link active" href="/">Домой</a></li>
+                <li><a class="nav-link" href="{% url 'books' %}">Поиск книг</a></li>
                 {% if request.user.is_authenticated %}
-                    <li><a class="getstarted scrollto" href='/profile'>Профиль</a></li>
+                    <li><a class="nav-link" href="/">Мои книги</a></li>
+                    <li><a class="getstarted" href='{% url 'profile' %}'>Профиль</a></li>
                 {% else %}
-                    <li><a class="getstarted scrollto" href='/login'>Войти</a></li>
+                    <li><a class="getstarted" href='{% url 'login_page' %}'>Войти</a></li>
                 {% endif %}
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
