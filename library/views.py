@@ -18,7 +18,7 @@ def books(request):
     if request.method == 'POST':
         if request.POST['type'] == 'search':
             books_obj = Book.objects.filter(name__icontains=request.POST['search'])
-        else:  # request.POST['type'] == 'sidebar'
+        elif request.POST['type'] == 'sidebar':
             post = list(request.POST.dict().values())[2:]
             ids = []
             for i in post:
@@ -28,6 +28,20 @@ def books(request):
             books_obj = Book.objects.all()
             for i in tags:
                 books_obj = books_obj.filter(tags=i)
+        else:
+            post = request.POST.dict()
+            new_book = Book.objects.create(
+                name=post['name'],
+                year=post['year'],
+                author_name=post['author_name'],
+                description=post['description'],
+            )
+            for i in range(10):
+                if str(i) in post:
+                    if post[str(i)].isdigit():
+                        new_book.tags.add(Tags.objects.get(pk=int(post[str(i)])))
+            new_book.seve()
+            books_obj = Book.objects.all()
     else:
         books_obj = Book.objects.all()
     books_obj = books_obj.filter(visibility=True)
