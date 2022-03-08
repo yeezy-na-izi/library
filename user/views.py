@@ -5,16 +5,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth import login, logout
 
-from django.urls import reverse
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 
 from user.forms import CreateUserForm, LoginUserForm
 from user.models import CustomUser
-from user.utils import send_email
+from user.utils import send_email_token
 from user.utils import token_generator
 
 
@@ -65,16 +64,12 @@ def reset_password(request):
                 messages.error(request, 'Такого пользователя не найдено')
                 return redirect('/restore')
 
-        user_id = urlsafe_base64_encode(force_bytes(user.username))
         domain = get_current_site(request).domain
-        relative = reverse('restore', kwargs={'user_id': user_id,
-                                               'token': token_generator.make_token(user)})
-        restore_url = f'http://{domain}{relative}'
-
         email_subject = 'Восстановление пароля'
-        email_body = f'Привет, {user.username}, чтобы восстановить пароль, перейди по ссылке: \n{restore_url}'
+        email_body = 'Привет, {}, чтобы восстановить пароль, перейди по ссылке: \n{}'
 
-        send_email(email_subject, email_body, [user.email])
+        send_email_token(user, email_subject, email_body, domain, 'restore')
+
         messages.success(request, 'Проверь свою почту')
     return render(request, 'user/restore.html')
 
@@ -85,7 +80,7 @@ def restore(request, user_id, token):
         return redirect(f'/profile')
     username = force_str(urlsafe_base64_decode(user_id))
     user = CustomUser.objects.get(username=username)
-    if not token_generator.check_token(user,  token):
+    if not token_generator.check_token(user, token):
         messages.error(request, 'Что-то пошло не так')
         return redirect('/login')
     if request.method == 'POST':
@@ -113,17 +108,11 @@ def registration(request):
             user.is_active = False
             user.save()
 
-            user_id = urlsafe_base64_encode(force_bytes(user.username))
             domain = get_current_site(request).domain
-            relative = reverse('activate', kwargs={'user_id': user_id,
-                                                   'token': token_generator.make_token(user)})
-            activate_url = f'http://{domain}{relative}'
-
             email_subject = 'Подтверждение почты'
-            email_body = f'Привет, {user.username}, это активация аккаунта, перейди по ссылке чтобы ' \
-                         f'верефицировать свой аккаунт\n{activate_url}'
-
-            send_email(email_subject, email_body, [user.email])
+            email_body = 'Привет, {}, это активация аккаунта, перейди по ссылке чтобы ' \
+                         'верефицировать свой аккаунт\n{}'
+            send_email_token(user, email_subject, email_body, domain, 'activate')
 
             messages.success(request, 'Подтвердите свою почту и войдите')
             return redirect('/login')
@@ -168,3 +157,7 @@ def verification_email(request, user_id, token):
         # TODO: убрать на проде
         messages.error(request, 'Такого аккаунта не существует, куда вы перешли, Михаил Новиков?')
     return redirect('/login')
+
+
+def email_login(request):
+    return redirect('/profile')

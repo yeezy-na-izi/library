@@ -1,5 +1,8 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from six import text_type
 
 
@@ -12,5 +15,16 @@ token_generator = AppTokenGenerator()
 
 
 def send_email(email_subject, email_body, to):
-    email = EmailMessage(email_subject, email_body, 'noreply@semycolon.com', to, )
+    if not to:
+        return
+    email = EmailMessage(email_subject, email_body, 'noreply@semycolon.com', to)
     email.send(fail_silently=False)
+
+
+def send_email_token(user, email_subject, email_body, domain, url_part):
+    user_id = urlsafe_base64_encode(force_bytes(user.username))
+    relative = reverse(url_part, kwargs={'user_id': user_id,
+                                         'token': token_generator.make_token(user)})
+    activate_url = f'http://{domain}{relative}'
+
+    send_email(email_subject, email_body.format(user.username, activate_url), [user.email])
