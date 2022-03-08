@@ -6,8 +6,20 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from six import text_type
-
 from user.models import CustomUser
+
+
+class MessagesStrings:
+    notLogged = "Вы еще не вошли"
+    alreadyLogged = "Вы уже авторизованны"
+    userDoesNotExist = "Такого пользователя не найдено"
+    passwordsDontMatch = "Пароли не совпадают"
+    somethingWentWrong = "Что-то пошло не так, повторите попытку"
+    userAlreadyActive = "Аккаунт уже активен"
+    userActiveSuccess = "Аккаунт успешно активирован"
+    userActiveFailure = "Аккаунт по каким-то причинам не был активирован"
+    checkEmail = "Проверьте свою почту"
+    loginSuccess = "Вход успешно выполнен"
 
 
 class AppTokenGenerator(PasswordResetTokenGenerator):
