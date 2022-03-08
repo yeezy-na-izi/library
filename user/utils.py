@@ -27,8 +27,9 @@ def send_email(email_subject, email_body, to):
 
 def send_email_token(user, email_subject, email_body, domain, url_part):
     user_id = urlsafe_base64_encode(force_bytes(user.username))
+    token = token_generator.make_token(user)
     relative = reverse(url_part, kwargs={'user_id': user_id,
-                                         'token': token_generator.make_token(user)})
+                                         'token': token})
     activate_url = f'http://{domain}{relative}'
 
     send_email(email_subject, email_body.format(user.username, activate_url), [user.email])
