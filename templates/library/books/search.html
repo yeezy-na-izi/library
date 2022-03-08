@@ -1,8 +1,11 @@
-<section id="search" class="search">
-    <form class="d-flex" method="post" name="search">
-        {% csrf_token %}
-        <input type="hidden" name="type" value="search">
-        <input name="search" class="form-control m-2" type="search" placeholder="Search" aria-label="Search">
-        <button type="submit" class="btn btn-outline-primary">Search</button>
-    </form>
-</section>
+<div class="container" style="margin-top: 10px">
+    <div class="row">
+        <div class="col-md-8">
+            {% include 'library/books/search_bar.html' %}
+            {% include 'library/books/results.html' %}
+        </div>
+        <div class="col-md-4">
+            {% include 'library/books/sidebar.html' %}
+        </div>
+    </div>
+</div>

@@ -1,18 +1,18 @@
-<header id="header" class="fixed-top">
+<header id="header" class="sticky-top">
     <div class="container d-flex align-items-center justify-content-between">
 
-        <h1 class="logo"><a href="/">Library</a></h1>
+        <h1 class="logo"><a href="{% url 'home_page' %}">Library</a></h1>
 
         <nav id="navbar" class="navbar">
             <ul>
                 {% if request.user.is_superuser %}
                     <li>
-                        <a class="nav-link scrollto" href="/admin">
+                        <a class="nav-link scrollto" href="{% url 'admin:index' %}">
                             Админка
                         </a>
                     </li>
                 {% endif %}
-                <li><a class="nav-link active" href="/">Домой</a></li>
+                <li><a class="nav-link active" href="{% url 'home_page' %}">Домой</a></li>
                 <li><a class="nav-link" href="{% url 'books' %}">Поиск книг</a></li>
                 {% if request.user.is_authenticated %}
                     <li><a class="nav-link" href="/">Мои книги</a></li>

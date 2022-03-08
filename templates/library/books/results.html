@@ -1,29 +1,10 @@
-<section id="results">
-    {% if books %}
-        <div class="row" style="padding: 10px">
-            {% for book in books %}
-                <div class="col-sm-6" style="padding: 5px 5px">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h5 class="card-title">{{ book.name }}</h5>
+{% if books %}
+    <div class="row" style="padding: 10px">
+        {% for book in books %}
+            {% include 'library/books/book_card.html' %}
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text">Ничего не найдено</p>
+{% endif %}
 
-                            </div>
-                            <div class="d-flex flex-row-reverse">
-                                {% for tag in book.tags.all %}
-                                    <span class="badge rounded-pill {{ tag.tags_type.color }}" style="margin: 0 0 0 5px">
-                                        {{ tag.name }}
-                                    </span>
-                                {% endfor %}
-                            </div>
-                            <p class="card-text">{{ book.description }}</p>
-                            <a href="/book/{{ book.slug }}" class="btn btn-primary">Открыть</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="text">Ничего не найдено</p>
-    {% endif %}
-</section>

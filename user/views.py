@@ -25,7 +25,7 @@ def profile(request):
     context = {
         "books": request.user.stared_books.all()
     }
-    return render(request, 'user/profile.html', context)
+    return render(request, 'user/profile/index.html', context)
 
 
 def authorization(request):

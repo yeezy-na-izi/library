@@ -1,0 +1,19 @@
+{% extends 'includes/index.html' %}
+{% load static %}
+{% block title %}
+    Профиль
+{% endblock %}
+
+{% block main %}
+    {% include 'user/profile/info.html' %}
+    {#    {% if request.user.stared_books %}#}
+
+    {% include 'user/profile/settings.html' %}
+    <section>
+        <div class="row" style="padding: 10px">
+            {% for book in books %}
+                {% include 'library/books/book_card.html' %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
