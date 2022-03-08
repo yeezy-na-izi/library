@@ -13,6 +13,7 @@ from django.utils.http import urlsafe_base64_decode
 
 from user.forms import CreateUserForm, LoginUserForm
 from user.models import CustomUser
+from user.utils import find_user_by_username_or_email
 from user.utils import send_email_token
 from user.utils import token_generator
 
@@ -51,18 +52,10 @@ def reset_password(request):
     if request.method == 'POST':
         username = request.POST['username']
         try:
-            validate_email(username)
-            try:
-                user = CustomUser.objects.get(email=username)
-            except CustomUser.DoesNotExist:
-                messages.error(request, 'Такого пользователя не найдено')
-                return redirect('/restore')
-        except ValidationError:
-            try:
-                user = CustomUser.objects.get(username=username)
-            except CustomUser.DoesNotExist:
-                messages.error(request, 'Такого пользователя не найдено')
-                return redirect('/restore')
+            user = find_user_by_username_or_email(username)
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Такого пользователя не найдено')
+            return redirect('/email_login')
 
         domain = get_current_site(request).domain
         email_subject = 'Восстановление пароля'
@@ -70,7 +63,7 @@ def reset_password(request):
 
         send_email_token(user, email_subject, email_body, domain, 'restore')
 
-        messages.success(request, 'Проверь свою почту')
+        messages.success(request, 'Проверьте свою почту')
     return render(request, 'user/restore.html')
 
 
@@ -139,7 +132,7 @@ def logout_def(request):
 def verification_email(request, user_id, token):
     if request.user.is_authenticated:
         messages.success(request, 'Вы уже авторизованны')
-        return redirect(f'/profile/{request.user.username}')
+        return redirect(f'/profile')
     try:
         username = force_str(urlsafe_base64_decode(user_id))
         user = CustomUser.objects.get(username=username)
@@ -160,4 +153,40 @@ def verification_email(request, user_id, token):
 
 
 def email_login(request):
-    return redirect('/profile')
+    if request.user.is_authenticated:
+        messages.success(request, 'Вы уже авторизованны')
+        return redirect(f'/profile')
+    if request.method == 'POST':
+        username = request.POST['username']
+        try:
+            user = find_user_by_username_or_email(username)
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Такого пользователя не найдено')
+            return redirect('/email_login')
+
+        domain = get_current_site(request).domain
+        email_subject = 'Вход через email'
+        email_body = 'Привет, {}, чтобы войти на сайт, перейди по ссылке: \n{}'
+
+        send_email_token(user, email_subject, email_body, domain, 'email_login')
+        messages.success(request, 'Проверьте свою почту')
+
+    return render(request, 'user/email_login.html')
+
+
+def email_login_ver(request, user_id, token):
+    try:
+        username = force_str(urlsafe_base64_decode(user_id))
+        user = CustomUser.objects.get(username=username)
+
+        if token_generator.check_token(user, token):
+            login(request, user)
+            user.save()
+            messages.success(request, 'Вход успешно выполнен')
+            return redirect('/profile')
+        messages.error(request, 'Что-то пошло не так')
+        return redirect('/login')
+    except CustomUser.DoesNotExist:
+        # TODO: убрать на проде
+        messages.error(request, 'Такого аккаунта не существует, куда вы перешли, Михаил Новиков?')
+    return redirect('/login')
