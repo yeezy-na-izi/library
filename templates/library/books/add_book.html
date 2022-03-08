@@ -1,0 +1,62 @@
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Добавить книгу
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавление</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" name="add-book" id="add-book">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="type" value="add-book">
+                    <div class="input-group mb-3">
+                        <input name='name' type="text" class="form-control" placeholder="Название" required/>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name='year' type="number" class="form-control" placeholder="Год издания" required/>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input name='author_name' type="text" class="form-control" placeholder="Имя автора"
+                               maxlength="200" required/>
+                    </div>
+                    <div class="input-group mb-3">
+                        <textarea name='description' type="text" class="form-control" placeholder="Описание"></textarea>
+                    </div>
+                    <div class="mb-3" style="align-content: flex-start">
+                        <label for="cover" class="form-label">Обложка</label>
+                        <input name='cover' type="file" accept="image/*" class="form-control"
+                               placeholder="Обложка книги" id="cover"/>
+
+                    </div>
+                    {% for tag in tags %}
+                        <div class="input-group mb-3">
+                            <label for="inputGroupSelect{{ forloop.counter }}"></label>
+                            <select class="form-select" id="inputGroupSelect{{ forloop.counter }}"
+                                    name="{{ forloop.counter }}" style="border-radius: 5px">
+                                <option selected>{{ tag.name }}</option>
+                                {% for option in tag.tags_set.all %}
+                                    <option value="{{ option.pk }}">{{ option.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
+                    <div class="mb-3">
+                        <label for="pdf" class="form-label">PDF книги</label>
+                        <input name='pdf' type="file" accept=".application/pdf" class="form-control"
+                               placeholder="Обложка книги" id="pdf"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary" form="add-book">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
