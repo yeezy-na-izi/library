@@ -14,6 +14,7 @@ from user.utils import find_user_by_username_or_email
 from user.utils import send_email_token
 from user.utils import token_generator
 from user.utils import MessagesStrings
+from user.utils import EmailMessages
 
 
 def profile(request):
@@ -57,10 +58,13 @@ def reset_password(request):
             return redirect('/email_login')
 
         domain = get_current_site(request).domain
-        email_subject = 'Восстановление пароля'
-        email_body = 'Привет, {}, чтобы восстановить пароль, перейди по ссылке: \n{}'
-
-        send_email_token(user, email_subject, email_body, domain, 'restore')
+        send_email_token(
+            user,
+            domain,
+            url_part='restore',
+            email_subject=EmailMessages.Restore.subject,
+            email_body=EmailMessages.Restore.body
+        )
 
         messages.success(request, MessagesStrings.checkEmail)
     return render(request, 'user/restore.html')
@@ -101,11 +105,13 @@ def registration(request):
             user.save()
 
             domain = get_current_site(request).domain
-            email_subject = 'Подтверждение почты'
-            email_body = 'Привет, {}, это активация аккаунта, перейди по ссылке чтобы ' \
-                         'верефицировать свой аккаунт\n{}'
-            send_email_token(user, email_subject, email_body, domain, 'activate')
-
+            send_email_token(
+                user,
+                domain,
+                url_part='activate',
+                email_subject=EmailMessages.Registration.subject,
+                email_body=EmailMessages.Registration.body
+            )
             messages.success(request, MessagesStrings.checkEmail)
             return redirect('/login')
         else:
@@ -163,10 +169,13 @@ def email_login(request):
             return redirect('/email_login')
 
         domain = get_current_site(request).domain
-        email_subject = 'Вход через email'
-        email_body = 'Привет, {}, чтобы войти на сайт, перейди по ссылке: \n{}'
-
-        send_email_token(user, email_subject, email_body, domain, 'email_login')
+        send_email_token(
+            user,
+            domain,
+            url_part='email_login',
+            email_subject=EmailMessages.Login.subject,
+            email_body=EmailMessages.Login.body
+        )
         messages.success(request, MessagesStrings.checkEmail)
 
     return render(request, 'user/email_login.html')

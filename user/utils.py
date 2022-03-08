@@ -22,6 +22,20 @@ class MessagesStrings:
     loginSuccess = "Вход успешно выполнен"
 
 
+class EmailMessages:
+    class Registration:
+        subject = 'Подтверждение почты'
+        body = 'Привет, {}, это активация аккаунта, перейди по ссылке чтобы верефицировать свой аккаунт\n{}'
+
+    class Restore:
+        subject = 'Восстановление пароля'
+        body = 'Привет, {}, чтобы восстановить пароль, перейди по ссылке: \n{}'
+
+    class Login:
+        subject = 'Вход через email'
+        body = 'Привет, {}, чтобы войти на сайт, перейди по ссылке: \n{}'
+
+
 class AppTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return text_type(user.is_active) + text_type(user.username) + text_type(timestamp)
@@ -37,7 +51,7 @@ def send_email(email_subject, email_body, to):
     email.send(fail_silently=False)
 
 
-def send_email_token(user, email_subject, email_body, domain, url_part):
+def send_email_token(user, domain, url_part, email_subject, email_body):
     user_id = urlsafe_base64_encode(force_bytes(user.username))
     token = token_generator.make_token(user)
     relative = reverse(url_part, kwargs={'user_id': user_id,
