@@ -1,9 +1,13 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
+from django.core.validators import validate_email
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from six import text_type
+
+from user.models import CustomUser
 
 
 class AppTokenGenerator(PasswordResetTokenGenerator):
@@ -28,3 +32,11 @@ def send_email_token(user, email_subject, email_body, domain, url_part):
     activate_url = f'http://{domain}{relative}'
 
     send_email(email_subject, email_body.format(user.username, activate_url), [user.email])
+
+
+def find_user_by_username_or_email(username_or_email):
+    try:
+        validate_email(username_or_email)
+        return CustomUser.objects.get(email=username_or_email)
+    except ValidationError:
+        return CustomUser.objects.get(username=username_or_email)
