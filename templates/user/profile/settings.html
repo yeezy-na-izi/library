@@ -1,0 +1,25 @@
+<section class="">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="input-group">
+            <label>
+                <input type="password" class="form-control {{ form_invalid_old }}" name="{{ form.old_password.name }}" placeholder="Старый пароль"
+                       autocomplete="password" required>
+            </label>
+        </div>
+        <div class="input-group">
+            <label>
+                <input type="password" class="form-control {{ form_invalid_new1 }}" name="{{ form.new_password1.name }}" placeholder="Новый пароль"
+                       autocomplete="password" required>
+            </label>
+        </div>
+        <div class="input-group">
+            <label>
+                <input type="password" class="form-control {{ form_invalid_new2 }}" name="{{ form.new_password2.name }}" placeholder="Повторите пароль"
+                       autocomplete="password" required>
+            </label>
+        </div>
+        {#        <input class="btn btn-outline-primary" type="submit" name="restore_password">#}
+        <button type="submit" class="btn btn-primary">Сменить пароль</button>
+    </form>
+</section>

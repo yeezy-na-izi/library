@@ -5,17 +5,20 @@
 {% endblock %}
 
 {% block main %}
-    <section>
+    <section class="d-flex justify-content-center">
         <form method="POST" action="">
             {% csrf_token %}
-            <div class="input-group mb-3">
-                <label>
-                    <input type="text" class="form-control" name="username" placeholder="Имя пользователя/почта"
-                           autocomplete="username" required>
-                </label>
+{#            <div class="input-group">#}
+{#                <label>#}
+{#                    <input type="text" class="form-control" name="username" placeholder="Имя пользователя/почта"#}
+{#                           autocomplete="username" required>#}
+{#                </label>#}
+{#            </div>#}
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="floatingInput" name="username" placeholder="Имя пользователя/почта" required>
+                <label for="floatingInput">Имя пользователя/почта</label>
             </div>
             <input class="btn btn-outline-primary" type="submit" name="email_login">
-
         </form>
     </section>
 {% endblock %}

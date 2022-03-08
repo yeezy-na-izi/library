@@ -1,3 +1,5 @@
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -8,7 +10,7 @@ from django.shortcuts import redirect
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 
-from user.forms import CreateUserForm, LoginUserForm
+from user.forms import CreateUserForm, LoginUserForm, ChangeUserPasswordForm
 from user.models import CustomUser
 from user.utils import find_user_by_username_or_email
 from user.utils import send_email_token
@@ -21,9 +23,28 @@ def profile(request):
     if not request.user.is_authenticated:
         messages.error(request, MessagesStrings.notLogged)
         return redirect('/login')
+    form = ChangeUserPasswordForm(request.user)
     context = {
-        "books": request.user.stared_books.all()
+        "books": request.user.stared_books.all(),
+        "form": form,
+        'form_invalid_old': '',
+        'form_invalid_new1': '',
+        'form_invalid_new2': ''
     }
+
+    if request.method == 'POST':
+        form = ChangeUserPasswordForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'Пароль успешно изменён')
+            return redirect('/profile')
+        else:
+            if 'old_password' in form.errors:
+                context['form_invalid_old'] = 'is-invalid'
+            else:
+                context['form_invalid_new1'] = 'is-invalid'
+                context['form_invalid_new2'] = 'is-invalid'
     return render(request, 'user/profile/index.html', context)
 
 
