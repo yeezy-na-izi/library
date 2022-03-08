@@ -96,19 +96,23 @@ def restore(request, user_id, token):
         messages.success(request, MessagesStrings.alreadyLogged)
         return redirect(f'/profile')
     username = force_str(urlsafe_base64_decode(user_id))
-    user = CustomUser.objects.get(username=username)
-    if not token_generator.check_token(user, token):
+    try:
+        user = CustomUser.objects.get(username=username)
+        if not token_generator.check_token(user, token):
+            messages.error(request, MessagesStrings.somethingWentWrong)
+            return redirect('/login')
+        if request.method == 'POST':
+            password1, password2 = request.POST['password1'], request.POST['password2']
+            if password1 != password2:
+                messages.error(request, MessagesStrings.passwordsDontMatch)
+                return redirect('#')
+            user.set_password(password1)
+            user.save()
+            login(request, user)
+            return redirect('/profile')
+    except CustomUser.DoesNotExist:
         messages.error(request, MessagesStrings.somethingWentWrong)
         return redirect('/login')
-    if request.method == 'POST':
-        password1, password2 = request.POST['password1'], request.POST['password2']
-        if password1 != password2:
-            messages.error(request, MessagesStrings.passwordsDontMatch)
-            return redirect('#')
-        user.set_password(password1)
-        user.save()
-        login(request, user)
-        return redirect('/profile')
 
     return render(request, 'user/restore_password.html')
 
