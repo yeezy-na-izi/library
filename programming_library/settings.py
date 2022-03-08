@@ -15,6 +15,17 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 
 import django_heroku
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+
+sentry_sdk.init(
+    dsn="https://92fd4e54b5f649039fabad010a0ff9f2@o1122268.ingest.sentry.io/6248773",
+    integrations=[DjangoIntegration()],
+
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
