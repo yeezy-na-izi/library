@@ -31,7 +31,7 @@ class Tags(models.Model):
     tags_type = models.ForeignKey(verbose_name='Тип категории', to=TagsType, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f'{self.tags_type}: {self.name}'
 
 
 class Book(models.Model):

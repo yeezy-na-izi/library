@@ -10,7 +10,7 @@
                     <div class="input-group mb-3">
                         <label for="inputGroupSelect{{ forloop.counter }}"></label>
                         <select class="form-select" id="inputGroupSelect{{ forloop.counter }}"
-                                name="{{ forloop.counter }}">
+                                name="{{ forloop.counter }}" style="border-radius: 5px">
                             <option selected>{{ tag.name }}</option>
                             {% for option in tag.tags_set.all %}
                                 <option value="{{ option.pk }}">{{ option.name }}</option>
