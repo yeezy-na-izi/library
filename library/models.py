@@ -41,8 +41,7 @@ class Book(models.Model):
 
     name = models.CharField(verbose_name='Название', max_length=1280)
     year = models.IntegerField(verbose_name='Год издания', )
-    author_name = models.CharField(verbose_name='Имя Автора', max_length=48)
-    author_surname = models.CharField(verbose_name='Фамилия Автора', max_length=128)
+    author_name = models.CharField(verbose_name='Имя Автора', max_length=200)
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     cover = models.ImageField(verbose_name='Обложка', blank=True, default='', upload_to='static/book/img')
     tags = models.ManyToManyField(verbose_name='Категории', blank=True, to=Tags)
