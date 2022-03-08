@@ -3,7 +3,11 @@
     <ul class="list-group">
         <li class="list-group-item">{{ request.user.username }}</li>
         <li class="list-group-item">{{ request.user.email }}</li>
-        <li class="list-group-item">{{ request.user.first_name }}</li>
-        <li class="list-group-item">{{ request.user.last_name }}</li>
+        {% if request.user.first_name %}
+            <li class="list-group-item">{{ request.user.first_name }}</li>
+        {% endif %}
+        {% if request.user.last_name %}
+            <li class="list-group-item">{{ request.user.last_name }}</li>
+        {% endif %}
     </ul>
 </section>
