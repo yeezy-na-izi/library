@@ -11,7 +11,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
     email = models.EmailField('email address', unique=True)
-    username = models.CharField(verbose_name='Ник', max_length=64)
+    username = models.CharField(verbose_name='Ник', max_length=32, unique=True)
     first_name = models.CharField(verbose_name='Имя', max_length=64, blank=True, null=True)
     last_name = models.CharField(verbose_name='Фамилия', max_length=64, blank=True, null=True)
 
