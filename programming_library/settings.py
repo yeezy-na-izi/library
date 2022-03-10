@@ -6,7 +6,6 @@ import django_heroku
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-
 sentry_sdk.init(
     dsn="https://eec691dd2e5a48b0a58396faac2dc5bd@o1122268.ingest.sentry.io/6248932",
     integrations=[DjangoIntegration()],
@@ -61,6 +60,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'custom_tags': 'library.tags',
+            }
         },
     },
 ]
@@ -110,7 +112,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 STATIC_URL = 'static/'
 STATIC_ROOT = 'static_root/'

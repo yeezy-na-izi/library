@@ -45,7 +45,7 @@ class Book(models.Model):
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
     cover = models.ImageField(verbose_name='Обложка', blank=True, default='', upload_to='static/book/img')
     tags = models.ManyToManyField(verbose_name='Категории', blank=True, to=Tags)
-    visibility = models.BooleanField(verbose_name='Визибилити', default=True)
+    visibility = models.BooleanField(verbose_name='Визибилити', default=False)
     slug = models.SlugField(null=True, blank=True)
     pdf = models.FileField(verbose_name='PDF', blank=True, upload_to='static/book/pdf')
 

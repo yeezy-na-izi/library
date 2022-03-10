@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <div class="col-sm-6" style="padding: 5px 5px">
     <div class="card" style="border-radius: 15px">
         <div class="card-body">
@@ -8,11 +9,11 @@
             <div class="d-flex flex-row-reverse">
                 {% for tag in book.tags.all %}
                     <span class="badge rounded-pill {{ tag.tags_type.color }}" style="margin: 0 0 0 5px">
-                                        {{ tag.name }}
-                                    </span>
+                        {{ tag.name }}
+                    </span>
                 {% endfor %}
             </div>
-            <p class="card-text">{{ book.description }}</p>
+            <p class="card-text">{{ book.description|cut_text:45 }}</p>
             <a href="/book/{{ book.slug }}" class="btn btn-primary">Открыть</a>
         </div>
     </div>
