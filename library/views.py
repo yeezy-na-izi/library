@@ -33,6 +33,8 @@ def books(request):
                 year=post['year'],
                 author_name=post['author_name'],
                 description=post['description'],
+                cover=post['cover'] or None,
+                pdf=post['pdf'] or None,
             )
             for i in range(10):
                 if str(i) in post:

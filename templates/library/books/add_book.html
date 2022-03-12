@@ -14,7 +14,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" name="add-book" id="add-book">
+                <form method="post" name="add-book" id="add-book" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <input type="hidden" name="type" value="add-book">
@@ -29,7 +29,8 @@
                                maxlength="200" required/>
                     </div>
                     <div class="input-group mb-3">
-                        <textarea name='description' type="text" class="form-control" placeholder="Описание"></textarea>
+                        <textarea name='description' type="text" class="form-control" placeholder="Описание"
+                                  required></textarea>
                     </div>
                     <div class="mb-3" style="align-content: flex-start">
                         <label for="cover" class="form-label">Обложка</label>
