@@ -54,6 +54,14 @@
                         <input name='pdf' type="file" accept=".application/pdf" class="form-control"
                                placeholder="Обложка книги" id="pdf"/>
                     </div>
+                    {% if request.user.is_superuser %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="visibility" name='visibility'>
+                            <label class="form-check-label" for="visibility">
+                                Visibility
+                            </label>
+                        </div>
+                    {% endif %}
                 </form>
             </div>
             <div class="modal-footer">

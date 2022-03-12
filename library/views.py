@@ -13,10 +13,9 @@ def home_page(request):
 
 
 def books(request):
-    all_books = Book.objects.all()
     if request.method == 'POST':
         if request.POST['type'] == 'search':
-            books_obj = all_books.filter(name__icontains=request.POST['search'])
+            books_obj = Book.objects.filter(name__icontains=request.POST['search'])
         elif request.POST['type'] == 'sidebar':
             post = list(request.POST.dict().values())[2:]
             ids = []
@@ -24,8 +23,9 @@ def books(request):
                 if i.isdigit():
                     ids.append(int(i))
             tags = Tags.objects.filter(pk__in=ids)
+            books_obj = Book.objects.all()
             for i in tags:
-                books_obj = all_books.filter(tags=i)
+                books_obj = books_obj.filter(tags=i)
         else:
             post = request.POST.dict()
             new_book = Book.objects.create(
@@ -39,15 +39,18 @@ def books(request):
                     if post[str(i)].isdigit():
                         new_book.tags.add(Tags.objects.get(pk=int(post[str(i)])))
             # new_book.sаve()
+            if request.user.is_superuser:
+                if 'on' == post['visibility']:
+                    new_book.visibility = True
             request.user.added_books.add(new_book)
             return redirect('/books/')
     else:
-        books_obj = all_books
+        books_obj = Book.objects.all()
     books_obj = books_obj.filter(visibility=True)
     on_checking = []
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            on_checking = all_books.filter(visibility=False)
+            on_checking = Book.objects.filter(visibility=False)
         else:
             on_checking = request.user.added_books.filter(visibility=False)
     context = {
@@ -77,13 +80,18 @@ def book_star(request, slug):
 
 
 def book_delete(request, slug):
-    Book.objects.get(slug=slug).delete()
-    return redirect('/books/')
+    if request.user.is_superuser:
+        Book.objects.get(slug=slug).delete()
+        return redirect('/books/')
+    else:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
 def book_approve(request, slug):
-    book = Book.objects.get(slug=slug)
-    book.visibility = True
-    book.save()
-
-    return redirect('/books/')
+    if request.user.is_superuser:
+        book = Book.objects.get(slug=slug)
+        book.visibility = True
+        book.save()
+        return redirect('/books/')
+    else:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
