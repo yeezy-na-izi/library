@@ -40,13 +40,16 @@ def books(request):
                         new_book.tags.add(Tags.objects.get(pk=int(post[str(i)])))
             # new_book.sаve()
             request.user.added_books.add(new_book)
-            books_obj = all_books
+            return redirect('/books/')
     else:
         books_obj = all_books
     books_obj = books_obj.filter(visibility=True)
     on_checking = []
     if request.user.is_authenticated:
-        on_checking = request.user.added_books.filter(visibility=False)
+        if request.user.is_superuser:
+            on_checking = all_books.filter(visibility=False)
+        else:
+            on_checking = request.user.added_books.filter(visibility=False)
     context = {
         'books': books_obj,
         'tags': TagsType.objects.all(),
@@ -71,3 +74,16 @@ def book_star(request, slug):
     request.user.stared_books.add(book)
     request.user.save()
     return redirect(f'/book/{slug}')
+
+
+def book_delete(request, slug):
+    Book.objects.get(slug=slug).delete()
+    return redirect('/books/')
+
+
+def book_approve(request, slug):
+    book = Book.objects.get(slug=slug)
+    book.visibility = True
+    book.save()
+
+    return redirect('/books/')
