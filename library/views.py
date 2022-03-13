@@ -42,8 +42,7 @@ def books(request):
                         new_book.tags.add(Tags.objects.get(pk=int(post[str(i)])))
             # new_book.sаve()
             if request.user.is_superuser:
-                if 'on' == post['visibility']:
-                    new_book.visibility = True
+                new_book.visibility = 'visibility' in post
             request.user.added_books.add(new_book)
             return redirect('/books/')
     else:
