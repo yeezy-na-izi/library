@@ -1,15 +1,45 @@
-from django.http import HttpResponseForbidden
-from django.http import HttpResponseNotFound
-from django.shortcuts import redirect
-from django.shortcuts import render
-from library.models import Book
-from library.models import TagsType
-from library.models import Tags
+from django.http import HttpResponseForbidden, HttpResponseNotFound
+
+from django.shortcuts import redirect, render
+
+from library.models import Book, TagsType, Tags
+
+from django.core.serializers import serialize
+from django.http import JsonResponse
+
+import json
+
+
+def get_user_dict(user):
+    context = {
+        'is_superuser': user.is_superuser,
+        'email': user.email,
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name
+    }
+
+    return context
 
 
 def home_page(request):
     context = {}
     return render(request, 'library/home_page/index.html', context)
+
+
+def json_home_page(request):
+    if request.user.is_authenticated:
+        context = {'user': get_user_dict(request.user)}
+    else:
+        context = {}
+    return JsonResponse(context)
+
+
+def json_books(request):
+    context = {}
+    all_books = json.loads(serialize('json', Book.objects.all()))
+    context['books'] = all_books
+    return JsonResponse(context)
 
 
 def books(request):

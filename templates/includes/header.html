@@ -1,8 +1,6 @@
 <header id="header" class="sticky-top">
     <div class="container d-flex align-items-center justify-content-between">
-
         <h1 class="logo"><a href="{% url 'home_page' %}">Library</a></h1>
-
         <nav id="navbar" class="navbar">
             <ul>
                 {% if request.user.is_superuser %}
