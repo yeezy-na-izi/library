@@ -38,7 +38,12 @@ def json_home_page(request):
 def json_books(request):
     context = {}
     all_books = json.loads(serialize('json', Book.objects.all()))
+    all_tags = json.loads(serialize('json', Tags.objects.all(), fields=['name']))
+    tags = []
+    for i in all_tags:
+        tags.append(i['fields']['name'])
     context['books'] = all_books
+    context['tags'] = tags
     return JsonResponse(context)
 
 
